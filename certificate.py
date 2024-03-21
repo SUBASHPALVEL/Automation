@@ -4,6 +4,19 @@ from PIL import Image
 
 def convert_image_to_pdf(image_path, pdf_path):
     img = Image.open(image_path)
+
+    # Resize image to A4 dimensions (595x842 pixels) while maintaining aspect ratio
+    a4_width, a4_height = 595, 842
+    width, height = img.size
+    aspect_ratio = width / height
+    if width > a4_width:
+        new_width = a4_width
+        new_height = int(new_width / aspect_ratio)
+    else:
+        new_height = a4_height
+        new_width = int(new_height * aspect_ratio)
+    img = img.resize((new_width, new_height), Image.LANCZOS)  # Use high-quality resampling
+
     pdf_bytes = img.convert("RGB").save(pdf_path, "PDF", resolution=100.0)
 
 def merge_all_files_to_pdf(input_dir, output_pdf):
@@ -16,14 +29,14 @@ def merge_all_files_to_pdf(input_dir, output_pdf):
             convert_image_to_pdf(file_path, pdf_path)
             pdf_merger.append(pdf_path)
             file_number += 1
-            print(file_number)
+            print(f"Processed image: {file_number}")
         elif file_name.lower().endswith('.pdf'):
             pdf_merger.append(file_path)
             file_number += 1
-            print(file_number)
+            print(f"Added existing PDF: {file_number}")
     pdf_merger.write(output_pdf)
     pdf_merger.close()
-    print(file_number)
+    print(f"Total files processed: {file_number}")
 
 # Specify the input directory containing PDF, JPG, and PNG files
 input_dir = "Certificate"

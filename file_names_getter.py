@@ -10,7 +10,7 @@ def get_filenames(folder_path):
   return filenames
 
 # Example usage
-folder_path = "Bulk-OCR/"  # Replace with your actual folder path
+folder_path = "OCR"  # Replace with your actual folder path
 filenames = get_filenames(folder_path)
 
 # Print the list of filenames
